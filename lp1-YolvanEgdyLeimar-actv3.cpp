@@ -10,7 +10,6 @@
    comando para correr: ./<ejecutable>.exe
 */
 #include <iostream>
-#include <cmath>
 #include "util.h"
 
 using namespace std;
@@ -85,36 +84,62 @@ class Matriz {
       /** impresa()
        * @typedef string
        * Acomoda la matriz en un string en forma de tabla
+       * 
+       * @return str, es la cadena a regresar
+       * divisorHorizontal almacena la linea divisora entre filas
+       * elem almacena el elemento llevado a string
+       * elemLen guarda la longitud del elemento
+       * spc determina la cantidad de espacios a introducir para alinear los elementos
+       * elementosMasLargos almacena las longitudes de las columnas mas largas
       */
       string impresa () {
-         string str = "";
-         string elem = "";
+         string str = "", divisorHorizontal = "", elem = "";
          int elemLen, spc;
-         int elementosMasLargos[_columnas];
+         int elementosMasLargos[columnas()];
+         /**
+          * Inicializa los valores en el arreglo
+         */ 
+         for (int j = 0; j < columnas(); j++) { elementosMasLargos[j] = 0; }
 
-         for (int j = 0; j < _columnas; j++) { elementosMasLargos[j] = 0; }
-
-         for (int i = 0; i < _filas; i++) {
-            for (int j = 0; j < _columnas; j++) {
+         /**
+          * Para cada elemento en cada columna y fila, compara y almacena la longitud mas larga en esa columna
+         */
+         for (int i = 0; i < filas(); i++) {
+            for (int j = 0; j < columnas(); j++) {
                elemLen = 0;
                elemLen = to_string(elemento(i,j)).length();
                if (elemLen > elementosMasLargos[j]) elementosMasLargos[j] = elemLen;
             }
          }
-
-         for (int i = 0; i < _filas; i++) {
+         /**
+          * Para cada elemento de la columna, concatena los caracteres para armar la linea divisora
+         */
+         for (int j = 0; j < columnas(); j++) {
+            divisorHorizontal += "+-" + util::multiplyStr("-", elementosMasLargos[j]) + "-";
+         }
+         divisorHorizontal += "+\n"; // Termina de concatenar la fila divisora
+         /**
+          * Para cada elemento en cada columna y fila,
+          * 1. Inicializa las variables y recupera el valor del elemento y longitud del elemento,
+          * 2. Calcula spc como la resta de la longitud del elemento y el elemento mas largo de la columna,
+          * 3. Concatena los espacios multiplicados por spc mas el valor del elemento
+          * 4. Concatena el caracter divisor ' | ' si aun no es el ultimo elemento
+         */ 
+         for (int i = 0; i < filas(); i++) {
+            str += divisorHorizontal;
             str += "| ";
-            for (int j = 0; j < _columnas; j++) {
+            for (int j = 0; j < columnas(); j++) {
                spc = elemLen = 0;
                elem = to_string(elemento(i,j));
                elemLen = elem.length();
-               spc = elemLen - elementosMasLargos[j];
-               spc = abs(spc);
+               spc = elementosMasLargos[j] - elemLen;
                str += util::multiplyStr(" ", spc) + elem;
-               if (j+1 < _columnas)  str += ", "; 
+               if (j+1 < columnas())  str += " | "; 
             }
             str += " |\n"; 
          }
+         str += divisorHorizontal; // Cierra la tabla
+
          return str;
       }
       /*==============
@@ -205,9 +230,10 @@ int main () {
             return 0;
          }
          // En cualquier caso hace uso de la matriz A
-         inputFilas = util::inputNumber<int>(cabecero + "Ingrese el numero de filas de la matriz A: ");
-         inputColumnas = util::inputNumber<int>("Ingrese el numero de columnas de la matriz A: ");
+         inputFilas = util::inputNumber<int>(cabecero + "Ingrese el numero de filas de la matriz A: ", 10, 1);
+         inputColumnas = util::inputNumber<int>("Ingrese el numero de columnas de la matriz A: ", 10, 1);
          Matriz A(inputFilas, inputColumnas);
+         util::borrarPantalla();
          A.llenar();
          util::borrarPantalla();
          // Si elige 3, define el numero escalar y calcula su resultado
@@ -218,9 +244,10 @@ int main () {
             break;
          }
          // Lo contrario, define la matriz B
-         inputFilas = util::inputNumber<int>(cabecero + "Ingrese el numero de filas de la matriz B: ");
-         inputColumnas = util::inputNumber<int>("Ingrese el numero de columnas de la matriz B: ");
+         inputFilas = util::inputNumber<int>(cabecero + "Ingrese el numero de filas de la matriz B: ", 10, 1);
+         inputColumnas = util::inputNumber<int>("Ingrese el numero de columnas de la matriz B: ", 10, 1);
          Matriz B(inputFilas, inputColumnas);
+         util::borrarPantalla();
          B.llenar();
          util::borrarPantalla();
          try {
