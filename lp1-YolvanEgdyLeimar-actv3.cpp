@@ -8,6 +8,8 @@
 
    comando para compilar: g++ <archivo> -o <ejecutable>.exe
    comando para correr: ./<ejecutable>.exe
+
+   N O T E : This program uses util-0.3
 */
 #include <iostream>
 #include "util.h"
@@ -19,7 +21,7 @@ string cabecero = ""; // cabecero guarda un string que se debe imprimir SIEMPRE
  * Clase Matriz.
  * Almacena los elementos y métodos necesarios para crear y manipular matrices
  * @author yolvangz
- * @version 1.0
+ * @version 1.1
  * @see namespace "operaciones" para ver las operaciones de matrices
 */
 class Matriz {
@@ -192,6 +194,7 @@ namespace operacion {
 }
 
 int main () {
+   util::setConfig(true, true, true);
    int inputFilas = 0, inputColumnas = 0, numeroEscalar = 0;
    int op;
    string mensaje; // mensaje guarda el cabecero + algun enunciado a imprimir 
@@ -226,7 +229,7 @@ int main () {
          if (op == 5) {
             if (!util::inputBool("Esta seguro de querer salir? ", 'S', 'N')) continue;
             cout << "Adios.\n";
-            system("pause");
+            util::pause();
             return 0;
          }
          // En cualquier caso hace uso de la matriz A
@@ -266,7 +269,7 @@ int main () {
             A.limpiar();
             B.limpiar();
             cout << cabecero << "ERROR. " << err.what() << "\nAbortar.\n";
-            system("pause");
+            util::pause();
             op = 0;
             continue;
          }
@@ -282,7 +285,7 @@ int main () {
    } while (util::inputBool("Desea Continuar?", 'S', 'N'));
       
    cout << "Adios.\n";
-   system("pause");
+   util::pause();
    return 0;
 }
 //Se crea un namespace especifico para clasificar y facilitar el llamado de las siguientes funciones
